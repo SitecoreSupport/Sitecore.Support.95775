@@ -1,19 +1,31 @@
 ﻿define(["sitecore"], function (Sitecore) {
-  var myapp = Sitecore.Definitions.App.extend({
-      initialized: function() {
-          var text = this.DisplayedText.get("text");
+    var InsertEmailDialog = Sitecore.Definitions.App.extend({
+        initialized: function () {
 
-          var flag = (text != null && text != "");
-          if (flag) {
-              this.InsertEmailLink.set("isEnabled", "true");
-          }
+            this.updateOkButton();
+            this.DisplayedText.on("change", function () {
+                this.updateOkButton();
+            }, this);
 
-          var $el = $("footer");
-          if ($el && $el.length > 0) {
-              $el.css("z-index", "4");
-          }
-      }
-  });
+        },
 
-  return myapp;
+        updateOkButton: function () {
+
+            var text = this.DisplayedText.get("text");
+
+            if (text)
+                this.InsertEmailLink.set("isEnabled", true);
+            else
+                this.InsertEmailLink.set("isEnabled", false);
+        }
+
+    });
+
+    var footer = $("footer");
+    console.log("Break footer");
+    if (footer && footer.length > 0) {
+        footer.css("z-index", "4");
+    }
+
+    return InsertEmailDialog;
 });
